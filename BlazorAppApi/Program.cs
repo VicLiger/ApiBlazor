@@ -1,10 +1,22 @@
 using BlazorAppApi.Components;
+using BlazorAppApi.Context;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IDbContextFactory<TarefaContext>, TarefaContextFactory>();
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+
+builder.Services.AddDbContext<TarefaContext>(x =>
+    x.UseInMemoryDatabase("app"));
+
+builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 var app = builder.Build();
 
@@ -14,6 +26,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    app.UseMigrationsEndPoint();
 }
 
 app.UseHttpsRedirection();
