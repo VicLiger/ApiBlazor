@@ -1,0 +1,25 @@
+﻿@page "/tarefas"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BlazorAppApi.Models
+@inject IDbContextFactory<BlazorAppApi.Context.TarefaContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="tarefas/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DbFactory.CreateDbContext().Tarefas">
+    <PropertyColumn Property="tarefa => tarefa.name" />
+    <PropertyColumn Property="tarefa => tarefa.description" />
+
+    <TemplateColumn Context="tarefa">
+        <a href="@($"tarefas/edit?id={tarefa.id}")">Edit</a> |
+        <a href="@($"tarefas/details?id={tarefa.id}")">Details</a> |
+        <a href="@($"tarefas/delete?id={tarefa.id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
